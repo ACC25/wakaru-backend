@@ -1,14 +1,15 @@
 require 'tempfile'
+
 class WatsonService
   attr_reader :text
 
   def initialize(user = nil, string)
     @user = user
     @text = string
-    @conn = Faraday.new(:url => 'https://gateway.watsonplatform.net')
   end
 
   def analyze_tone
+    conn = Faraday.new(:url => 'https://gateway.watsonplatform.net')
     url_string = url_encode(text)
     conn.basic_auth("#{ENV['watson_tone_username']}", "#{ENV['watson_tone_password']}")
     response = conn.get("/tone-analyzer/api/v3/tone") do |request|
