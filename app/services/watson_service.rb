@@ -20,19 +20,20 @@ class WatsonService
   end
 
   def analyze_tone_chat(tone_chat_input)
-    # File.open("tone_chat/temp.json","w") do |file|
-    #   file.write(JSON.pretty_generate(tone_chat_input))
-    # end
-    # conn.request :multipart
-    # conn.response :logger
-    # conn.adapter :net_http
-    conn.basic_auth("#{ENV['watson_tone_username']}", "#{ENV['watson_tone_password']}")
-    response = conn.get("/tone-analyzer/api/v3/tone_chat") do |request|
-      request.params['Content-Type'] = "application/json"
-      request.params['body'] = tone_chat_input.to_json
-      request.params['version'] = "2017-08-25"
+    uri = URI.parse("https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone_chat?version=2017-08-25")
+    request = Net::HTTP::Post.new(uri)
+    request.basic_auth("#{ENV['watson_tone_username']}", "#{ENV['watson_tone_password']}")
+    request.content_type = "application/json"
+    request.body = tone_chat_input.to_json
+    # request.body << File.read("tone_chat/temp.json").delete("\r\n")
+    req_options = {
+    use_ssl: uri.scheme == "https",
+    }
+
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
     end
-    output = JSON.parse(response.body, symbolize_names: true)
+    JSON.parse(response.body, symbolize_names: true)
   end
 
 

@@ -11,9 +11,8 @@ describe "watson object can return json information" do
     expect(@watson.text).to eq(@text)
   end
 
-  it "can communicate with IBM watson for tone analysis" do
-    json_response = @watson.analyze_tone
-    expect(json_response[:document_tone]).to eq(json_response[:document_tone])
+  xit "can communicate with IBM watson for tone analysis" do
+    expect(@watson.analyze_tone[:document_tone].length).to eq(1)
   end
 
   xit "can communicate with IBM watson for tone chat analysis" do
@@ -37,6 +36,6 @@ describe "watson object can return json information" do
         }
       ]
     }
-    json_response = @watson.analyze_tone_chat(tone_chat_input)
+    expect(@watson.analyze_tone_chat(tone_chat_input)[:utterances_tone].length).to eq(4)
   end
 end
