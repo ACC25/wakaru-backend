@@ -11,7 +11,7 @@ class CsvLoader
     responses = []
     question = ""
     CSV.foreach(path) do |row|
-      if row[0] != "Timestamp"
+      if row[0] != "Timestamp" && public_response_profane?(row[1]) == false
         responses << ToneResponse.new(question, row[1])
       elsif row[0] == "Timestamp"
         question = row[1]
@@ -20,7 +20,10 @@ class CsvLoader
     responses
   end
 
-  def load_tone_chat_baseline
+  private
+
+  def public_response_profane?(text)
+    Obscenity.profane?(text)
   end
 
 end
