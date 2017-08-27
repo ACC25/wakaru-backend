@@ -22,4 +22,21 @@ class ToneResponse
     }
   end
 
+  def nlp_params
+    {
+      "text": @response,
+      "features": {
+        "keywords": {
+          "emotion": false,
+          "sentiment": true,
+          "limit": 3
+        },
+        "entities": {
+          "sentiment": true,
+          "limit": 3
+        }
+      }
+    }
+  end
+
 end
