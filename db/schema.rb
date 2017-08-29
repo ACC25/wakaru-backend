@@ -32,8 +32,6 @@ ActiveRecord::Schema.define(version: 20170827230510) do
     t.float "extraversion"
     t.float "agreeableness"
     t.float "emotional_range"
-    t.string "utterance_tone_name"
-    t.float "utterance_tone"
   end
 
 end

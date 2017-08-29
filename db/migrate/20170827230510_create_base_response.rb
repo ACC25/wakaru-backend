@@ -17,8 +17,6 @@ class CreateBaseResponse < ActiveRecord::Migration[5.1]
       t.float :extraversion
       t.float :agreeableness
       t.float :emotional_range
-      t.string :utterance_tone_name
-      t.float :utterance_tone
     end
   end
 end
