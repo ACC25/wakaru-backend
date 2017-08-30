@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830175442) do
+ActiveRecord::Schema.define(version: 20170830231517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20170830175442) do
     t.float "extraversion"
     t.float "agreeableness"
     t.float "emotional_range"
+    t.integer "category"
   end
 
   create_table "base_utterances", force: :cascade do |t|
