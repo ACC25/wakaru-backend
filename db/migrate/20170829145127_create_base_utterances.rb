@@ -1,6 +1,6 @@
-class CreateUtterances < ActiveRecord::Migration[5.1]
+class CreateBaseUtterances < ActiveRecord::Migration[5.1]
   def change
-    create_table :utterances do |t|
+    create_table :base_utterances do |t|
       t.string :question_tone_name
       t.float :question_tone
       t.string :question_tone_name_two

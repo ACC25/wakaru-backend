@@ -1,0 +1,3 @@
+class BaseUtterance < ApplicationRecord
+
+end

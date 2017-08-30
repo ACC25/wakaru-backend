@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170827230510) do
+ActiveRecord::Schema.define(version: 20170830175442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,4 +34,18 @@ ActiveRecord::Schema.define(version: 20170827230510) do
     t.float "emotional_range"
   end
 
+  create_table "base_utterances", force: :cascade do |t|
+    t.string "question_tone_name"
+    t.float "question_tone"
+    t.string "question_tone_name_two"
+    t.float "question_tone_two"
+    t.string "response_tone_name"
+    t.float "response_tone"
+    t.string "response_tone_name_two"
+    t.float "response_tone_two"
+    t.bigint "base_response_id"
+    t.index ["base_response_id"], name: "index_base_utterances_on_base_response_id"
+  end
+
+  add_foreign_key "base_utterances", "base_responses"
 end

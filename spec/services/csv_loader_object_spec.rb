@@ -36,4 +36,12 @@ describe "csv loader can iterate over a csv file" do
     response = WatsonService.new(loader.response).analyze_tone_chat(loader.utterances)
     expect(response.length).to eq(1)
   end
+
+  # it "can enter information into the db" do
+  #   path = 'spec/test_files/warranty_query_good_outcome_good_tone.csv'
+  #   loader = CsvLoader.new(path).load_tone_baseline[0]
+  #
+  #   tone_response = WatsonService.new(loader.response).analyze_tone
+  #   tone_chat_response = WatsonService.new(loader.response).analyze_tone_chat(loader.utterances)
+  # end
 end
