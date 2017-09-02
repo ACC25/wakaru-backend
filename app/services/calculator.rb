@@ -4,8 +4,8 @@ class Calculator
     BaseResponse.where(domain: domain).average(column.to_sym)
   end
 
-  def overall_average_base_tone(domain)
-
+  def geometric_mean_base_tones(domain, category)
+    binding.pry
   end
 
 end
