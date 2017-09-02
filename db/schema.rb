@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830231517) do
+ActiveRecord::Schema.define(version: 20170902215659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,5 +48,32 @@ ActiveRecord::Schema.define(version: 20170830231517) do
     t.index ["base_response_id"], name: "index_base_utterances_on_base_response_id"
   end
 
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "responses", force: :cascade do |t|
+    t.integer "domain", default: 0
+    t.integer "category"
+    t.bigint "company_id"
+    t.string "response_text"
+    t.string "question_text"
+    t.float "disgust"
+    t.float "fear"
+    t.float "joy"
+    t.float "sadness"
+    t.float "anger"
+    t.float "analytical"
+    t.float "confident"
+    t.float "tentative"
+    t.float "openness"
+    t.float "conscientiousness"
+    t.float "extraversion"
+    t.float "agreeableness"
+    t.float "emotional_range"
+    t.index ["company_id"], name: "index_responses_on_company_id"
+  end
+
   add_foreign_key "base_utterances", "base_responses"
+  add_foreign_key "responses", "companies"
 end
