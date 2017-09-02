@@ -12,15 +12,17 @@ class SeedData
   end
 
   def watson_tone(responses)
+    count = 0
     responses.each do |response|
       watson = WatsonService.new(response.response)
       tones = watson.analyze_tone
-      # tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
+      tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
       tone_object = db_create_tones(tones, response.question, response.response)
-      # tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id)
+      tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id) if tone_chat != nil
       write_to_csv(tone_object)
+      puts "Created db entries for response #{count} out of #{responses.length} for category #{@category}"
+      count += 1
     end
-    puts "Created Tone and Tone Chat Object"
   end
 
   private
@@ -66,7 +68,6 @@ class SeedData
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
-    binding.pry
     input = BaseUtterance.create!(base_response_id: foreign_key,
                           question_tone_name: tone_chat[:utterances_tone][0][:tones][0][:tone_id],
                           question_tone: tone_chat[:utterances_tone][0][:tones][0][:score],
