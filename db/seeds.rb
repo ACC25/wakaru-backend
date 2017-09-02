@@ -15,11 +15,34 @@ class SeedData
     responses.each do |response|
       watson = WatsonService.new(response.response)
       tones = watson.analyze_tone
-      tone_chat = watson.analyze_tone_chat(response.utterances)
+      # tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
       tone_object = db_create_tones(tones, response.question, response.response)
-      tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id)
+      # tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id)
+      write_to_csv(tone_object)
     end
     puts "Created Tone and Tone Chat Object"
+  end
+
+  private
+
+  def write_to_csv(tone_object)
+    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range"]
+    CSV.open("db/stats/form_outcomes.csv", "a+") do |csv|
+      row = CSV::Row.new(header,[])
+      row["Category"] = tone_object.category
+      row["Domain"] = tone_object.domain
+      row["Disgust"] = tone_object.disgust
+      row["Fear"] = tone_object.fear
+      row["Joy"] = tone_object.joy
+      row["Sadness"] = tone_object.sadness
+      row["Anger"] = tone_object.anger
+      row["Openness"] = tone_object.openness
+      row["Conscientiousness"] = tone_object.conscientiousness
+      row["Extraversion"] = tone_object.extraversion
+      row["Agreeableness"] = tone_object.agreeableness
+      row["Emotional Range"] = tone_object.emotional_range
+      csv << row
+    end
   end
 
   def db_create_tones(tones, question, response)
@@ -43,6 +66,7 @@ class SeedData
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
+    binding.pry
     input = BaseUtterance.create!(base_response_id: foreign_key,
                           question_tone_name: tone_chat[:utterances_tone][0][:tones][0][:tone_id],
                           question_tone: tone_chat[:utterances_tone][0][:tones][0][:score],
@@ -80,7 +104,23 @@ class SeedData
 
 end
 
+# (path, category, domain)
+# category 0 = good_outcome_good_tone
+# category 1 = bad_outcome_good_tone
+# category 2 = bad_outcome_bad_tone
+# domain 0 = public results
+# domain 1 = private results
+# domain 2 = professional results
 
-SeedData.new("spec/test_files/accessories_inventory_query_bad_outcome_bad_tone.csv", 2, 0).load_fixture
-SeedData.new("spec/test_files/warranty_query_bad_outcome_bad_tone.csv", 2, 0).load_fixture
-SeedData.new("spec/test_files/warranty_query_good_outcome_good_tone.csv", 0, 0).load_fixture
+SeedData.new("db/stats/responses/Warranty Query - Good Outcome%2FGood Tone.csv", 0, 0).load_fixture
+SeedData.new("db/stats/responses/Warranty Query - Bad Outcome%2FGood Tone.csv", 1, 0).load_fixture
+SeedData.new("db/stats/responses/Warranty Query - Bad Outcome%2FBad Tone.csv", 2, 0).load_fixture
+SeedData.new("db/stats/responses/Wait Times Query - Good Outcome%2FGood Tone.csv", 0, 0).load_fixture
+SeedData.new("db/stats/responses/Wait Times Query - Bad Outcome%2FGood Tone.csv", 1, 0).load_fixture
+SeedData.new("db/stats/responses/Wait Times Query - Bad Outcome%2FBad Tone.csv", 2, 0).load_fixture
+SeedData.new("db/stats/responses/Surfboard Inventory Query - Good Outcome%2FGood Tone.csv", 0, 1).load_fixture
+SeedData.new("db/stats/responses/Surfboard Inventory Query - Bad Outcome%2F Good Tone.csv", 1, 1).load_fixture
+SeedData.new("db/stats/responses/Surfboard Inventory Query - Bad Outcome%2FBad Tone.csv", 2, 1).load_fixture
+SeedData.new("db/stats/responses/Accessories Inventory Query - Good Outcome%2FGood Tone.csv", 0, 1).load_fixture
+SeedData.new("db/stats/responses/Accessories Inventory Query - Bad Outcome%2FGood Tone.csv", 1, 1).load_fixture
+SeedData.new("db/stats/responses/Accessories Inventory Query - Bad Outcome%2FBad Tone.csv", 2, 1).load_fixture
