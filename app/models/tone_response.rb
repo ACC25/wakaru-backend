@@ -11,11 +11,11 @@ class ToneResponse
     {
       "utterances": [
         {
-          "text": @question,
+          "text": question,
           "user": "customer"
         },
         {
-          "text": @response,
+          "text": response,
           "user": "agent"
         }
       ]
@@ -24,7 +24,7 @@ class ToneResponse
 
   def nlp_params
     {
-      "text": @response,
+      "text": response,
       "features": {
         "keywords": {
           "emotion": false,
@@ -37,6 +37,10 @@ class ToneResponse
         }
       }
     }
+  end
+
+  def analyze_category
+    binding.pry
   end
 
 end
