@@ -64,7 +64,18 @@ class SeedData
                           agreeableness: tones[:document_tone][:tone_categories][2][:tones][3][:score],
                           emotional_range: tones[:document_tone][:tone_categories][2][:tones][4][:score],
                           category: @category,
-                          domain: @domain)
+                          domain: @domain,
+                          enjoyment_score: calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                              tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                              tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                          big_three_score: calculate_big3(tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][3][:score]
+                                                          )
+                          )
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
@@ -77,6 +88,16 @@ class SeedData
                           response_tone: validate_tone_chat_one(tone_chat),
                           response_tone_name_two: validate_tone_chat_two_name(tone_chat),
                           response_tone_two: validate_tone_chat_two(tone_chat))
+  end
+
+  def calculate_big3(conscientiousness, extraversion, agreeableness)
+    metrics = [conscientiousness, extraversion, agreeableness]
+    metrics.reduce(:+)
+  end
+
+  def calculate_enjoyment(joy, sadness, openness, conscientiousness, extraversion, agreeableness)
+    metrics = [joy, openness, conscientiousness, extraversion, agreeableness]
+    (metrics.reduce(:+) - sadness) * joy
   end
 
   def validate_tone_chat_two_name(tone_chat)

@@ -19,7 +19,6 @@ class Calculator
 
   def relations(category)
     tones.each_pair do |key, value|
-      binding.pry
       BaseResponse.where(category: category)
     end
   end

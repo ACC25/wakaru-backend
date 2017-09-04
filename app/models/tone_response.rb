@@ -41,16 +41,7 @@ class ToneResponse
 
   def analyze_category(user_id, domain)
     tones = WatsonService.new(response).analyze_tone
-    tone_scores = {
-      joy: tones[:document_tone][:tone_categories][0][:tones][3][:score],
-      sadness: tones[:document_tone][:tone_categories][0][:tones][4][:score],
-      openness: tones[:document_tone][:tone_categories][2][:tones][0][:score],
-      conscientiousness: tones[:document_tone][:tone_categories][2][:tones][1][:score],
-      extraversion: tones[:document_tone][:tone_categories][2][:tones][2][:score],
-      agreeableness: tones[:document_tone][:tone_categories][2][:tones][3][:score],
-    }
-    calculator = Calculator.new(user_id, domain, tone_scores)
-    results = calculator.find_relations
+    Response.find_relations(tones, user_id, domain, question, response)
   end
 
 end
