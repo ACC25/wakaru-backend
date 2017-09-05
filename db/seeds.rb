@@ -28,7 +28,7 @@ class SeedData
   private
 
   def write_to_csv(tone_object)
-    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range"]
+    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range", "Enjoyment Score", "Big 3"]
     CSV.open("db/stats/form_outcomes.csv", "a+") do |csv|
       row = CSV::Row.new(header,[])
       row["Category"] = tone_object.category
@@ -43,6 +43,8 @@ class SeedData
       row["Extraversion"] = tone_object.extraversion
       row["Agreeableness"] = tone_object.agreeableness
       row["Emotional Range"] = tone_object.emotional_range
+      row["Enjoyment Score"] = tone_object.enjoyment_score
+      row["Big 3"] = tone_object.big_three_score
       csv << row
     end
   end

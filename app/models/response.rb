@@ -3,9 +3,9 @@ class Response < ApplicationRecord
 
 
   def self.find_relations(tones, user_id, domain, question, response)
-    response = enter_db(user_id, tones, domain, question, response)
+    db_response = enter_db(user_id, tones, domain, question, response)
+    
     binding.pry
-    calculator = Calculator.new(user_id, domain, tone_scores)
   end
 
 
@@ -37,8 +37,7 @@ class Response < ApplicationRecord
                                                       tones[:document_tone][:tone_categories][2][:tones][3][:score]),
                  big_three_score: calculate_big3(tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                  tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score]
-                                                          )
+                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score])
                   )
   end
 
