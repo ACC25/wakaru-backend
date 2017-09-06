@@ -4,8 +4,7 @@ class Response < ApplicationRecord
 
   def self.find_relations(tones, user_id, domain, question, response)
     db_response = enter_db(user_id, tones, domain, question, response)
-    
-    binding.pry
+    Stat.new(db_response.id).find_my_category
   end
 
 
@@ -35,19 +34,21 @@ class Response < ApplicationRecord
                                                       tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                       tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                       tones[:document_tone][:tone_categories][2][:tones][3][:score]),
-                 big_three_score: calculate_big3(tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                 big_five_score: calculate_big5(tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                 tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                  tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score])
+                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score],
+                                                 tones[:document_tone][:tone_categories][2][:tones][4][:score])
                   )
   end
 
-  def self.calculate_big3(conscientiousness, extraversion, agreeableness)
+  def self.calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)
     metrics = [conscientiousness, extraversion, agreeableness]
     metrics.reduce(:+)
   end
 
   def self.calculate_enjoyment(joy, sadness, openness, conscientiousness, extraversion, agreeableness)
-    metrics = [joy, openness, conscientiousness, extraversion, agreeableness]
-    (metrics.reduce(:+) - sadness) * joy
+    metrics = [extraversion, agreeableness]
+    metrics.reduce(:+) * joy
   end
 end

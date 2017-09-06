@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20170904030408) do
     t.float "emotional_range"
     t.integer "category"
     t.float "enjoyment_score"
-    t.float "big_three_score"
+    t.float "big_five_score"
   end
 
   create_table "base_utterances", force: :cascade do |t|
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 20170904030408) do
     t.float "agreeableness"
     t.float "emotional_range"
     t.float "enjoyment_score"
-    t.float "big_three_score"
+    t.float "big_five_score"
     t.index ["company_id"], name: "index_responses_on_company_id"
   end
 

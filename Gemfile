@@ -29,6 +29,7 @@ gem 'faraday'
 gem 'figaro'
 gem 'obscenity'
 gem 'descriptive-statistics'
+gem 'gsl'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

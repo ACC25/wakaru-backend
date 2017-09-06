@@ -1,5 +1,5 @@
 class AddBigThreeToResponses < ActiveRecord::Migration[5.1]
   def change
-    add_column :responses, :big_three_score, :float
+    add_column :responses, :big_five_score, :float
   end
 end
