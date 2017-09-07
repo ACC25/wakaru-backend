@@ -6,8 +6,8 @@ class Response < ApplicationRecord
     db_response = enter_db(tones, domain, question, response)
     stat = Statistic.new(db_response.id)
     stat.find_my_category
-    stat.create_suggestions
-    binding.pry
+    stat.recommendation
+    # stat.create_suggestions
   end
 
 
@@ -40,8 +40,20 @@ class Response < ApplicationRecord
                                                  tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                  tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                  tones[:document_tone][:tone_categories][2][:tones][3][:score],
-                                                 tones[:document_tone][:tone_categories][2][:tones][4][:score])
+                                                 tones[:document_tone][:tone_categories][2][:tones][4][:score]),
+                  dissatisfaction_score: calculate_dissatisfaction(calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                                                      tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                      tones[:document_tone][:tone_categories][0][:tones][4][:score])
                   )
+  end
+
+  def self.calculate_dissatisfaction(enjoyment_score, extraversion, sadness)
+    enjoyment_score - extraversion * sadness
   end
 
   def self.calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)

@@ -77,7 +77,16 @@ class SeedData
                                                           tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                           tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                           tones[:document_tone][:tone_categories][2][:tones][3][:score],
-                                                          tones[:document_tone][:tone_categories][2][:tones][4][:score]))
+                                                          tones[:document_tone][:tone_categories][2][:tones][4][:score]),
+                          dissatisfaction_score: calculate_dissatisfaction(calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score])
+                                                                                              )
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
@@ -90,6 +99,10 @@ class SeedData
                           response_tone: validate_tone_chat_one(tone_chat),
                           response_tone_name_two: validate_tone_chat_two_name(tone_chat),
                           response_tone_two: validate_tone_chat_two(tone_chat))
+  end
+
+  def calculate_dissatisfaction(enjoyment_score, extraversion, sadness)
+    enjoyment_score - extraversion * sadness
   end
 
   def calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)
