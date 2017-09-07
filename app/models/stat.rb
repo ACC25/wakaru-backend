@@ -1,36 +1,45 @@
 class Stat
-  attr_reader :db
+  attr_reader :db,
+              :scores
 
   def initialize(id)
     @db ||= Response.find(id)
-    @percentages = 0.10
-    @es_differences = false
+    @scores = {
+      enjoyment_score: {
+        category_0: "",
+        category_1: "",
+        category_2: "",
+        category_3: ""
+      },
+      big_five_score: {
+        category_0: "",
+        category_1: "",
+        category_2: "",
+        category_3: ""
+      }
+    }
   end
 
   def find_my_category
-    es_category = find_es_differences
+    find_percentile_ranks
     binding.pry
   end
 
   private
 
-  def find_es_differences
-    category_0 = Response.where(category: 0).average(:enjoyment_score).to_f
-    category_1 = Response.where(category: 1).average(:enjoyment_score).to_f
-    category_2 = Response.where(category: 2).average(:enjoyment_score).to_f
-    @es_differences = [category_0, category_1, category_2].map do |avg|
-      difference_between(avg, db.enjoyment_score)
+  def find_percentile_ranks
+    scores.each do |key, value|
+      value.each do |k, v|
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if key == :enjoyment_score
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if key == :big_five_score
+          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if k == :category_3 && key == :enjoyment_score
+          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if k == :category_3 && key == :big_five_score
+      end
     end
-    min = differences.select{ |n| n > 0}.min
-    differences.index(min)
   end
 
   def difference_between(v1, v2)
    (v1-v2)/((v1+v2)/2) * 100
-  end
-
-  def find_real_min
-
   end
 
 end
