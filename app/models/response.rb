@@ -1,18 +1,19 @@
 class Response < ApplicationRecord
   belongs_to :company
 
-
-  def self.find_relations(tones, user_id, domain, question, response)
-    db_response = enter_db(user_id, tones, domain, question, response)
-    Stat.new(db_response.id).find_my_category
+  def self.analyze_category(question, response, domain)
+    tones = WatsonService.new(response).analyze_tone
+    db_response = enter_db(tones, domain, question, response)
+    stat = Stat.new(db_response.id)
+    relations = stat.find_my_category
+    binding.pry
   end
 
 
   private
 
-  def self.enter_db(user_id, tones, domain, question, response)
-    self.create!(company_id: user_id,
-                 response_text: response,
+  def self.enter_db(tones, domain, question, response)
+    self.create!(response_text: response,
                  question_text: question,
                  disgust: tones[:document_tone][:tone_categories][0][:tones][1][:score],
                  fear: tones[:document_tone][:tone_categories][0][:tones][2][:score],
