@@ -42,38 +42,23 @@ class Statistic
     find_overall_score
   end
 
-  def recommendation
-  end
-
-  def create_suggestions
-    comments.each_pair do |k, v|
-      k == :enjoyment ? comments[k] = query_enjoyment_words : comments[k] = query_brand_words
-    end
-  end
+  # def create_comments
+  #   comments.each_pair do |k, v|
+  #     k == :enjoyment ? comments[k] = query_enjoyment_words : comments[k] = query_brand_words
+  #   end
+  # end
 
   private
+
+  def find_overall_score
+    
+  end
 
   def find_percentile_dissastisfaction
     scores[:dissatisfaction_score].each do |k, v|
       scores[:dissatisfaction_score][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score)
       scores[:dissatisfaction_score][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score) if k == :category_3
     end
-  end
-
-  def query_enjoyment_words
-    # above_average = ["enjoyable", "above-average", ""]
-    # best = []
-    # below_average = []
-    # worst = []
-    # output = []
-    # if scores[:enjoyment_score][:category_0] >= 50.0
-    #   "A customers experience with this email is likely #{good_words.sample}"
-    # elsif scores
-    # end
-  end
-
-  def query_brand_words
-    bad_words = ["poor", "below-average"]
   end
 
   def find_percentile_enjoyment

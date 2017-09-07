@@ -6,8 +6,7 @@ class Response < ApplicationRecord
     db_response = enter_db(tones, domain, question, response)
     stat = Statistic.new(db_response.id)
     stat.find_my_category
-    stat.recommendation
-    # stat.create_suggestions
+    # stat.create_comments
   end
 
 
