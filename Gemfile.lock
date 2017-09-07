@@ -41,7 +41,7 @@ GEM
     arel (8.0.0)
     bindex (0.5.0)
     builder (3.2.3)
-    coderay (1.1.1)
+    coderay (1.1.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0)
@@ -50,6 +50,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    descriptive_statistics (2.4.0)
     diff-lcs (1.3)
     erubi (1.6.1)
     execjs (2.7.0)
@@ -65,6 +66,7 @@ GEM
       thor (~> 0.14)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    gsl (2.1.0.3)
     i18n (0.8.6)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
@@ -165,7 +167,7 @@ GEM
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.2.0)
+    sprockets-rails (3.2.1)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
@@ -193,9 +195,11 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.2)
+  descriptive_statistics (~> 2.4.0)
   factory_girl_rails
   faraday
   figaro
+  gsl
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   obscenity

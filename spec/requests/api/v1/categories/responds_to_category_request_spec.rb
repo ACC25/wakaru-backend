@@ -3,10 +3,12 @@ require 'rails_helper'
 describe "POST /api/v1/category?" do
   it "responds with the category of the email" do
     company = create(:company)
-    good_good_response_1 = create(:response, company_id: company.id, category: 0, domain: 0, disgust: 0.030028, fear: 0.009473, joy: 0.084382, sadness: 0.019232, anger: 0.029976, openness: 0.475831, conscientiousness: 0.98957, extraversion: 0.408163, agreeableness: 0.97923, emotional_range: 0.987887 )
-    good_good_response_2 = create(:response, company_id: company.id, category: 0, domain: 0, disgust: 0.025028, fear: 0.007473, joy: 0.074382, sadness: 0.009232, anger: 0.020176, openness: 0.395831, conscientiousness: 0.80157, extraversion: 0.808163, agreeableness: 0.91923, emotional_range: 0.987887 )
-    bad_bad_response_1 = create(:response, company_id: company.id, category: 2, domain: 0, disgust: 0.058420909, fear: 0.042893318, joy: 0.216413909, sadness: 0.258661545, anger: 0.085502864, openness: 0.273824, conscientiousness: 0.778441636, extraversion: 0.422372, agreeableness: 0.653384318, emotional_range: 0.842277273 )
-    bad_bad_response_2 = create(:response, company_id: company.id, category: 2, domain: 0, disgust: 0.038420909, fear: 0.052893318, joy: 0.286413909, sadness: 0.558661545, anger: 0.105502864, openness: 0.193824, conscientiousness: 0.478441636, extraversion: 0.422372, agreeableness: 0.653384318, emotional_range: 0.842277273 )
+    good_good_response_1 = Response.create!(company_id: company.id, category: 0, domain: 0, disgust: 0.020028, fear: 0.02473, joy: 0.074382, sadness: 0.1019232, anger: 0.059976, openness: 0.119831, conscientiousness: 0.99957, extraversion: 0.607163, agreeableness: 0.92923, emotional_range: 0.947887, enjoyment_score: 0.814108, big_five_score: 3.597 )
+    good_good_response_2 = Response.create(company_id: company.id, category: 0, domain: 0, disgust: 0.035028, fear: 0.007473, joy: 0.664382, sadness: 0.09232, anger: 0.050176, openness: 0.290831, conscientiousness: 0.99857, extraversion: 0.938163, agreeableness: 0.99123, emotional_range: 0.878987, enjoyment_score: 1.0275, big_five_score: 3.285)
+    good_good_response_3 = Response.create(company_id: company.id, category: 1, domain: 0, disgust: 0.035028, fear: 0.007473, joy: 0.664382, sadness: 0.09232, anger: 0.050176, openness: 0.290831, conscientiousness: 0.99857, extraversion: 0.938163, agreeableness: 0.99123, emotional_range: 0.878987, enjoyment_score: 0.6275, big_five_score: 3.5085)
+    good_good_response_3 = Response.create(company_id: company.id, category: 1, domain: 0, disgust: 0.035028, fear: 0.007473, joy: 0.664382, sadness: 0.09232, anger: 0.050176, openness: 0.290831, conscientiousness: 0.99857, extraversion: 0.938163, agreeableness: 0.99123, emotional_range: 0.878987, enjoyment_score: 0.39275, big_five_score: 2.2085)
+    bad_bad_response_1 = Response.create(company_id: company.id, category: 2, domain: 0, disgust: 0.058420909, fear: 0.042893318, joy: 0.216413909, sadness: 0.258661545, anger: 0.085502864, openness: 0.273824, conscientiousness: 0.778441636, extraversion: 0.422372, agreeableness: 0.653384318, emotional_range: 0.1622277273, enjoyment_score: 0.161, big_five_score: 2.83 )
+    bad_bad_response_2 = Response.create(company_id: company.id, category: 2, domain: 0, disgust: 0.038420909, fear: 0.052893318, joy: 0.286413909, sadness: 0.558661545, anger: 0.105502864, openness: 0.193824, conscientiousness: 0.478441636, extraversion: 0.422372, agreeableness: 0.653384318, emotional_range: 0.242277273, enjoyment_score: 0.188, big_five_score: 3.00 )
 
     email = {
       user_id: company.id,
@@ -17,6 +19,9 @@ describe "POST /api/v1/category?" do
 
     post "/api/v1/category", :params => email
 
+    expect(response).to be_success
 
+    scores = JSON.parse(response.body)
+    
   end
 end

@@ -28,7 +28,7 @@ class SeedData
   private
 
   def write_to_csv(tone_object)
-    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range"]
+    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range", "Enjoyment Score", "Big 3"]
     CSV.open("db/stats/form_outcomes.csv", "a+") do |csv|
       row = CSV::Row.new(header,[])
       row["Category"] = tone_object.category
@@ -43,6 +43,8 @@ class SeedData
       row["Extraversion"] = tone_object.extraversion
       row["Agreeableness"] = tone_object.agreeableness
       row["Emotional Range"] = tone_object.emotional_range
+      row["Enjoyment Score"] = tone_object.enjoyment_score
+      row["Big 3"] = tone_object.big_five_score
       csv << row
     end
   end
@@ -64,7 +66,18 @@ class SeedData
                           agreeableness: tones[:document_tone][:tone_categories][2][:tones][3][:score],
                           emotional_range: tones[:document_tone][:tone_categories][2][:tones][4][:score],
                           category: @category,
-                          domain: @domain)
+                          domain: @domain,
+                          enjoyment_score: calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                                tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                          big_five_score: calculate_big5(tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][3][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][4][:score]))
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
@@ -77,6 +90,16 @@ class SeedData
                           response_tone: validate_tone_chat_one(tone_chat),
                           response_tone_name_two: validate_tone_chat_two_name(tone_chat),
                           response_tone_two: validate_tone_chat_two(tone_chat))
+  end
+
+  def calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)
+    metrics = [openness, conscientiousness, extraversion, agreeableness, emotional_range]
+    metrics.reduce(:+)
+  end
+
+  def calculate_enjoyment(joy, sadness, openness, conscientiousness, extraversion, agreeableness)
+    metrics = [extraversion, agreeableness]
+    metrics.reduce(:+) * joy
   end
 
   def validate_tone_chat_two_name(tone_chat)
