@@ -23,5 +23,7 @@ describe "POST /api/v1/category?" do
 
     scores = JSON.parse(response.body)
 
+    expect(scores["scores"]["enjoyment_score"]["category_0"]).to eq(50.0)
+    expect(scores["scores"]["enjoyment_score"]["category_3"]).to eq(75.0)
   end
 end

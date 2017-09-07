@@ -1,8 +1,8 @@
 class Statistic
   attr_reader :db,
               :scores,
-              :comments,
-              :recommended_score
+              :overall_score,
+              :comments
 
   def initialize(id)
     @db ||= Response.find(id)
@@ -51,7 +51,7 @@ class Statistic
   private
 
   def find_overall_score
-    
+
   end
 
   def find_percentile_dissastisfaction
