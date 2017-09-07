@@ -1,6 +1,7 @@
-class Stat
+class Statistic
   attr_reader :db,
-              :scores
+              :scores,
+              :comments
 
   def initialize(id)
     @db ||= Response.find(id)
@@ -18,13 +19,39 @@ class Stat
         category_3: ""
       }
     }
+    @comments = {
+      enjoyment: [],
+      brand: []
+    }
   end
 
   def find_my_category
     find_percentile_ranks
   end
 
+  def create_suggestions
+    comments.each_pair do |k, v|
+      k == :enjoyment ? comments[k] = query_enjoyment_words : comments[k] = query_brand_words
+    end
+  end
+
   private
+
+  def query_enjoyment_words
+    above_average = ["pleasant", "above-average"]
+    best = []
+    below_average = []
+    worst = []
+    output = []
+    if scores[:enjoyment_score][:category_0] >= 50.0
+      "A customers experience with this email is likely #{good_words.sample}"
+    elsif scores
+    end
+  end
+
+  def query_brand_words
+    bad_words = ["poor", "below-average"]
+  end
 
   def find_percentile_ranks
     scores.each do |key, value|

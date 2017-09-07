@@ -4,8 +4,9 @@ class Response < ApplicationRecord
   def self.analyze_category(question, response, domain)
     tones = WatsonService.new(response).analyze_tone
     db_response = enter_db(tones, domain, question, response)
-    stat = Stat.new(db_response.id)
-    relations = stat.find_my_category
+    stat = Statistic.new(db_response.id)
+    stat.find_my_category
+    stat.create_suggestions
     binding.pry
   end
 
