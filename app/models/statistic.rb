@@ -45,6 +45,97 @@ class Statistic
 
   private
 
+  def interpret_findings(findings)
+    summarizations = {}
+    findings.each_pair do |category|
+      summarizations[category[0]] = summarize_findings(category[1])
+    end
+    summarizations
+  end
+
+  def find_overall_score
+    determinations = {}
+    scores.each_pair do |category, value|
+      determinations[category] = []
+      scores[category].map do |metric|
+        determinations[category].push(low_medium_high(metric[1]))
+      end
+    end
+    determinations
+  end
+
+  def low_medium_high(number)
+    if number >= 75.0
+      "high"
+    elsif number >= 45.0 && number <= 75.0
+      "medium"
+    elsif number <= 45.0
+      "low"
+    end
+  end
+
+  def find_percentile_dissastisfaction
+    scores[:dissatisfaction_score].each do |k, v|
+      scores[:dissatisfaction_score][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score)
+      scores[:dissatisfaction_score][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score) if k == :category_3
+    end
+  end
+
+  def find_percentile_enjoyment
+    scores.each do |key, value|
+      value.each do |k, v|
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if key == :enjoyment_score
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if key == :big_five_score
+          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if k == :category_3 && key == :enjoyment_score
+          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if k == :category_3 && key == :big_five_score
+      end
+    end
+  end
+
+  def difference_between(v1, v2)
+   (v1-v2)/((v1+v2)/2) * 100
+  end
+
+  def summarize_findings(findings)
+    if findings.count("high") == 3 && findings[2] == "high"
+      "high"
+    elsif findings[0] == "high" && findings[2] == "high"
+      "high"
+    elsif findings[0] == "medium" && findings[3] == "high"
+      "high"
+    elsif findings[3] == "medium" && findings.count("high") == 2
+      "high"
+    elsif findings.count("medium") == 3 && findings[2] == "high" || findings[2] == "medium"
+      "medium"
+    elsif findings[3] == "medium" && findings[2] == "medium"
+      "medium"
+    elsif findings[1] == "medium" && findings[3] == "medium"
+      "medium"
+    elsif findings[2] == "medium" && findings[0] != "high"
+      "medium"
+    elsif findings.count("medium") == 3 && findings[2] == "low"
+      "low"
+    elsif findings[2] == "low" && findings[0] == "low"
+      "low"
+    elsif findings[2] == "medium" && findings[3] == "low"
+      "low"
+    elsif findings[2] == "medium" && findings[2] == "low"
+      "low"
+    elsif findings[0] == "medium"
+      "high"
+    elsif findings[3] == "medium"
+      "medium"
+    elsif findings[2] == "medium"
+      "medium"
+    elsif findings[2] == "low"
+      "low"
+    elsif findings[1] == "low"
+      "low"
+    else
+      "medium"
+    end
+  end
+
   def determine_overall_entertainment(summary)
     if summary[:enjoyment_score] == "high" && summary[:big_five_score] == "high"
       overall_score[:enjoyment] = "Overall tone of this email is positive and agreeable."
@@ -88,97 +179,4 @@ class Statistic
       overall_score[:brand] = "Brand suffered from interaction."
     end
   end
-
-  def interpret_findings(findings)
-    summarizations = {}
-    findings.each_pair do |category|
-      summarizations[category[0]] = summarize_findings(category[1])
-    end
-    summarizations
-  end
-
-  def summarize_findings(findings)
-    if findings.count("high") == 3 && findings[2] == "high"
-      "high"
-    elsif findings[0] == "high" && findings[2] == "high"
-      "high"
-    elsif findings[0] == "medium" && findings[3] == "high"
-      "high"
-    elsif findings[3] == "medium" && findings.count("high") == 2
-      "high"
-    elsif findings.count("medium") == 3 && findings[2] == "high" || findings[2] == "medium"
-      "medium"
-    elsif findings[3] == "medium" && findings[2] == "medium"
-      "medium"
-    elsif findings[1] == "medium" && findings[3] == "medium"
-      "medium"
-    elsif findings[2] == "medium" && findings[0] != "high"
-      "medium"
-    elsif findings.count("medium") == 3 && findings[2] == "low"
-      "low"
-    elsif findings[2] == "low" && findings[0] == "low"
-      "low"
-    elsif findings[2] == "medium" && findings[3] == "low"
-      "low"
-    elsif findings[2] == "medium" && findings[2] == "low"
-      "low"
-    elsif findings[0] == "medium"
-      "high"
-    elsif findings[3] == "medium"
-      "medium"
-    elsif findings[2] == "medium"
-      "medium"
-    elsif findings[2] == "low"
-      "low"
-    elsif findings[1] == "low"
-      "low"
-    else
-      "medium"
-    end
-  end
-
-  def find_overall_score
-    determinations = {}
-    scores.each_pair do |category, value|
-      determinations[category] = []
-      scores[category].map do |metric|
-        determinations[category].push(low_medium_high(metric[1]))
-      end
-    end
-    determinations
-  end
-
-  def low_medium_high(number)
-    if number >= 75.0
-      "high"
-    elsif number >= 45.0 && number <= 75.0
-      "medium"
-    elsif number <= 45.0
-      "low"
-    end
-  end
-
-
-  def find_percentile_dissastisfaction
-    scores[:dissatisfaction_score].each do |k, v|
-      scores[:dissatisfaction_score][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score)
-      scores[:dissatisfaction_score][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score) if k == :category_3
-    end
-  end
-
-  def find_percentile_enjoyment
-    scores.each do |key, value|
-      value.each do |k, v|
-          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if key == :enjoyment_score
-          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if key == :big_five_score
-          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if k == :category_3 && key == :enjoyment_score
-          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if k == :category_3 && key == :big_five_score
-      end
-    end
-  end
-
-  def difference_between(v1, v2)
-   (v1-v2)/((v1+v2)/2) * 100
-  end
-
 end
