@@ -1,8 +1,7 @@
 class Statistic
   attr_reader :db,
               :scores,
-              :overall_score,
-              :comments
+              :overall_score
 
   def initialize(id)
     @db ||= Response.find(id)
@@ -30,10 +29,6 @@ class Statistic
       enjoyment: "",
       brand: ""
     }
-    @comments = {
-      enjoyment: [],
-      brand: []
-    }
   end
 
   def find_my_category
@@ -41,16 +36,56 @@ class Statistic
     find_percentile_dissastisfaction
     findings = find_overall_score
     summary = interpret_findings(findings)
-    binding.pry
+    determine_overall_entertainment(summary)
+    determine_overall_brand(summary)
   end
 
-  # def create_comments
-  #   comments.each_pair do |k, v|
-  #     k == :enjoyment ? comments[k] = query_enjoyment_words : comments[k] = query_brand_words
-  #   end
-  # end
 
   private
+
+  def determine_overall_entertainment(summary)
+    if summary[:enjoyment_score] == "high" && summary[:big_five_score] == "high"
+      overall_score[:enjoyment] = "Overall tone of this email is positive and agreeable."
+    elsif summary[:enjoyment_score] == "high" && summary[:big_five_score] == "medium"
+      overall_score[:enjoyment] = "Overall tone of this email is positive and agreeable."
+    elsif summary[:enjoyment_score] == "high" && summary[:big_five_score] == "low"
+      overall_score[:enjoyment] = "Overall tone is good, but declining agreeableness."
+    elsif summary[:enjoyment_score] == "medium" && summary[:big_five_score] == "high"
+      overall_score[:enjoyment] = "Overall tone could be improved with small changes."
+    elsif summary[:enjoyment_score] == "medium" && summary[:big_five_score] == "medium"
+      overall_score[:enjoyment] = "Overall tone could be improved with small changes."
+    elsif summary[:enjoyment_score] == "medium" && summary[:big_five_score] == "low"
+      overall_score[:enjoyment] = "Overall tone uncertain. Recommend re-write."
+    elsif summary[:enjoyment_score] == "low" && summary[:big_five_score] == "high"
+      overall_score[:enjoyment] = "Overall tone is negative. Recommend re-write."
+    elsif summary[:enjoyment_score] == "low" && summary[:big_five_score] == "medium"
+      overall_score[:enjoyment] = "Overall tone is negative and unwarranted."
+    elsif summary[:enjoyment_score] == "low" && summary[:big_five_score] == "low"
+      overall_score[:enjoyment] = "Overall tone is unprofessional."
+    end
+  end
+
+  def determine_overall_brand(summary)
+    if summary[:dissatisfaction_score] == "high" && summary[:enjoyment_score] == "high"
+      overall_score[:brand] = "Great brand representation."
+    elsif summary[:dissatisfaction_score] == "high" && summary[:enjoyment_score] == "medium"
+      overall_score[:brand] = "Great brand representation."
+    elsif summary[:dissatisfaction_score] == "high" && summary[:enjoyment_score] == "low"
+      overall_score[:brand] = "Customer will likely forget this interaction."
+    elsif summary[:dissatisfaction_score] == "medium" && summary[:enjoyment_score] == "high"
+      overall_score[:brand] = "Overall positive brand representation."
+    elsif summary[:dissatisfaction_score] == "medium" && summary[:enjoyment_score] == "medium"
+      overall_score[:brand] = "Overall positive brand representation."
+    elsif summary[:dissatisfaction_score] == "medium" && summary[:enjoyment_score] == "low"
+      overall_score[:brand] = "Customer will likely forget this interaction."
+    elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "high"
+      overall_score[:brand] = "Poor brand representation."
+    elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "medium"
+      overall_score[:brand] = "Brand likely suffered from interaction."
+    elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "medium"
+      overall_score[:brand] = "Brand suffered from interaction."
+    end
+  end
 
   def interpret_findings(findings)
     summarizations = {}
