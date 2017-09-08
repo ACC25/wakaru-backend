@@ -1,4 +1,6 @@
 class Statistic
+  include ActiveModel::Serialization
+
   attr_reader :db,
               :scores,
               :overall_score
