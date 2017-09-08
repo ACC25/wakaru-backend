@@ -42,7 +42,6 @@ class Statistic
     determine_overall_brand(summary)
   end
 
-
   private
 
   def interpret_findings(findings)
@@ -176,6 +175,8 @@ class Statistic
     elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "medium"
       overall_score[:brand] = "Brand likely suffered from interaction."
     elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "medium"
+      overall_score[:brand] = "Brand suffered from interaction."
+    elsif summary[:dissatisfaction_score] == "low" && summary[:enjoyment_score] == "low"
       overall_score[:brand] = "Brand suffered from interaction."
     end
   end
