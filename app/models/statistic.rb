@@ -5,8 +5,8 @@ class Statistic
               :scores,
               :overall_score
 
-  def initialize(id)
-    @db ||= Response.find(id)
+  def initialize(id = nil)
+    @db ||= Response.find(id) if id
     @scores = {
       enjoyment_score: {
         category_0: "",
@@ -42,7 +42,25 @@ class Statistic
     determine_overall_brand(summary)
   end
 
+  def find_top_words(category)
+    collected_relations = collect_relations(category)
+    collect_watson_responses = collect_top_words(collected_relations)
+    binding.pry
+  end
+
   private
+
+  def collect_top_words(collected_relations)
+    collected_relations.map do |response|
+      formatted_text = ToneResponse.new("", response).nlp_params
+      response = WatsonService.new(response).analyze_nlp(formatted_text)
+      binding.pry
+    end
+  end
+
+  def collect_relations(category)
+    Response.where(category: category).pluck(:response_text)
+  end
 
   def interpret_findings(findings)
     summarizations = {}

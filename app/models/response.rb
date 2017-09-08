@@ -9,6 +9,11 @@ class Response < ApplicationRecord
     stat
   end
 
+  def self.top_words(category)
+    stat = Statistic.new
+    stat.find_top_words(category)
+  end
+
 
   private
 
