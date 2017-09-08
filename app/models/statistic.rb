@@ -39,7 +39,8 @@ class Statistic
   def find_my_category
     find_percentile_enjoyment
     find_percentile_dissastisfaction
-    find_overall_score
+    findings = find_overall_score
+    interpret_findings(findings)
   end
 
   # def create_comments
@@ -50,9 +51,38 @@ class Statistic
 
   private
 
-  def find_overall_score
-
+  def interpret_findings(findings)
+    summarizations = {}
+    findings.each_pair do |category|
+      summarizations[category[0]] = summarize_findings(category[1])
+    end
   end
+
+  def summarize_findings(findings)
+    
+  end
+
+  def find_overall_score
+    determinations = {}
+    scores.each_pair do |category, value|
+      determinations[category] = []
+      scores[category].map do |metric|
+        determinations[category].push(low_medium_high(metric[1]))
+      end
+    end
+    determinations
+  end
+
+  def low_medium_high(number)
+    if number >= 75.0
+      "high"
+    elsif number >= 45.0 && number <= 75.0
+      "medium"
+    elsif number <= 45.0
+      "low"
+    end
+  end
+
 
   def find_percentile_dissastisfaction
     scores[:dissatisfaction_score].each do |k, v|
