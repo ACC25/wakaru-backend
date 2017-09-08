@@ -40,7 +40,8 @@ class Statistic
     find_percentile_enjoyment
     find_percentile_dissastisfaction
     findings = find_overall_score
-    interpret_findings(findings)
+    summary = interpret_findings(findings)
+    binding.pry
   end
 
   # def create_comments
@@ -56,10 +57,47 @@ class Statistic
     findings.each_pair do |category|
       summarizations[category[0]] = summarize_findings(category[1])
     end
+    summarizations
   end
 
   def summarize_findings(findings)
-    
+    if findings.count("high") == 3 && findings[2] == "high"
+      "high"
+    elsif findings[0] == "high" && findings[2] == "high"
+      "high"
+    elsif findings[0] == "medium" && findings[3] == "high"
+      "high"
+    elsif findings[3] == "medium" && findings.count("high") == 2
+      "high"
+    elsif findings.count("medium") == 3 && findings[2] == "high" || findings[2] == "medium"
+      "medium"
+    elsif findings[3] == "medium" && findings[2] == "medium"
+      "medium"
+    elsif findings[1] == "medium" && findings[3] == "medium"
+      "medium"
+    elsif findings[2] == "medium" && findings[0] != "high"
+      "medium"
+    elsif findings.count("medium") == 3 && findings[2] == "low"
+      "low"
+    elsif findings[2] == "low" && findings[0] == "low"
+      "low"
+    elsif findings[2] == "medium" && findings[3] == "low"
+      "low"
+    elsif findings[2] == "medium" && findings[2] == "low"
+      "low"
+    elsif findings[0] == "medium"
+      "high"
+    elsif findings[3] == "medium"
+      "medium"
+    elsif findings[2] == "medium"
+      "medium"
+    elsif findings[2] == "low"
+      "low"
+    elsif findings[1] == "low"
+      "low"
+    else
+      "medium"
+    end
   end
 
   def find_overall_score
