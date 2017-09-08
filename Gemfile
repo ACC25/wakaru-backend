@@ -30,6 +30,7 @@ gem 'figaro'
 gem 'obscenity'
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 gem 'gsl'
+gem 'active_model_serializers', '~> 0.10.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
