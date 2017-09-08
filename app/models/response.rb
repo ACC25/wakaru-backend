@@ -7,10 +7,7 @@ class Response < ApplicationRecord
     stat = Statistic.new(db_response.id)
     stat.find_my_category
     # stat.create_comments
-    { scores:stat.scores,
-      recommendation: stat.overall_score,
-      explanation: stat.comments
-    }
+    stat
   end
 
 
