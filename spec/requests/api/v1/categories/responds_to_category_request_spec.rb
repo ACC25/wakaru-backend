@@ -22,7 +22,6 @@ describe "POST /api/v1/category?" do
     expect(response).to be_success
 
     scores = JSON.parse(response.body)
-    binding.pry
 
     expect(scores["scores"]["enjoyment_score"]["category_0"]).to eq(50.0)
     expect(scores["scores"]["enjoyment_score"]["category_3"]).to eq(75.0)
