@@ -29,10 +29,10 @@ class ToneResponse
         "keywords": {
           "emotion": false,
           "sentiment": true,
-          "limit": 3
+          "limit": 5
         },
         "entities": {
-          "sentiment": true,
+          "sentiment": false,
           "limit": 3
         }
       }

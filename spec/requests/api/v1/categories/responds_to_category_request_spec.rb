@@ -79,7 +79,7 @@ describe "POST /api/v1/category?" do
     expect(scores["overall_score"]["brand"]).to eq("Great brand representation.")
   end
 
-  it "responds with an appropriate category for an average email" do
+  xit "responds with an appropriate category for an average email" do
     company = create(:company)
     good_good_response_1 = Response.create!(company_id: company.id, category: 0, domain: 0, disgust: 0.020028, fear: 0.02473, joy: 0.074382, sadness: 0.1019232, anger: 0.059976, openness: 0.119831, conscientiousness: 0.99957, extraversion: 0.607163, agreeableness: 0.92923, emotional_range: 0.947887, enjoyment_score: 0.814108, big_five_score: 3.597, dissatisfaction_score: 1.198)
     good_good_response_2 = Response.create(company_id: company.id, category: 0, domain: 0, disgust: 0.035028, fear: 0.007473, joy: 0.664382, sadness: 0.09232, anger: 0.050176, openness: 0.290831, conscientiousness: 0.99857, extraversion: 0.938163, agreeableness: 0.99123, emotional_range: 0.878987, enjoyment_score: 1.0275, big_five_score: 3.285, dissatisfaction_score: 0.858)
@@ -100,8 +100,9 @@ describe "POST /api/v1/category?" do
     expect(response).to be_success
 
     scores = JSON.parse(response.body)
-    binding.pry
-    expect(scores["overall_score"]["enjoyment"]).to eq("Overall tone of this email is positive and agreeable.")
-    expect(scores["overall_score"]["brand"]).to eq("Great brand representation.")
+
+    expect(scores["overall_score"]["enjoyment"]).to eq("Overall tone uncertain. Recommend re-write.")
+    expect(scores["overall_score"]["brand"]).to eq("Overall positive brand representation.")
+    expect(scores["overall_score"]["category"]).to eq("moderate")
   end
 end
