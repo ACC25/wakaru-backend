@@ -14,6 +14,10 @@ class Response < ApplicationRecord
     stat.find_top_words(category)
   end
 
+  def self.get_categories
+    Statistic.new.categories_breakdown
+  end
+
 
   private
 
