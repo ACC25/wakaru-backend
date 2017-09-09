@@ -18,7 +18,7 @@ class Response < ApplicationRecord
     Statistic.new.categories_breakdown
   end
 
-  def self.get_fixtures(company_id)
+  def self.get_fixtures
     Response.where(domain: 1).map do |entry|
       entry.id
     end
