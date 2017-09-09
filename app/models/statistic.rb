@@ -34,6 +34,12 @@ class Statistic
     }
   end
 
+  def find_my_stats
+    find_percentile_enjoyment
+    find_percentile_dissastisfaction
+    set_category(db.domain)
+  end
+
   def find_my_category
     find_percentile_enjoyment
     find_percentile_dissastisfaction
@@ -52,7 +58,7 @@ class Statistic
 
   def set_category(number)
     categories = ["good", "moderate", "bad"]
-    db.update(category: number)
+    db.update(category: number) if db.domain == 0
     overall_score[:category] = categories[number]
   end
 

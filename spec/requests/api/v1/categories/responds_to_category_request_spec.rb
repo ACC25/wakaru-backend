@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 describe "POST /api/v1/category?" do
-
-  before(:each) do
-    Response.delete_all
-    Company.delete_all
-  end
   xit "responds with the category of the email" do
     company = create(:company)
     good_good_response_1 = Response.create!(company_id: company.id, category: 0, domain: 0, disgust: 0.020028, fear: 0.02473, joy: 0.074382, sadness: 0.1019232, anger: 0.059976, openness: 0.119831, conscientiousness: 0.99957, extraversion: 0.607163, agreeableness: 0.92923, emotional_range: 0.947887, enjoyment_score: 0.814108, big_five_score: 3.597, dissatisfaction_score: 1.198)

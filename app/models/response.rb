@@ -5,7 +5,7 @@ class Response < ApplicationRecord
     tones = WatsonService.new(response).analyze_tone
     db_response = enter_db(tones, domain, question, response)
     stat = Statistic.new(db_response.id)
-    stat.find_my_category
+    domain == "1" ? stat.find_my_stats : stat.find_my_category
     stat
   end
 
