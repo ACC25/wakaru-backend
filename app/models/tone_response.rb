@@ -38,11 +38,6 @@ class ToneResponse
       }
     }
   end
-  #
-  # def analyze_category(user_id, domain)
-  #   tones = WatsonService.new(response).analyze_tone
-  #   Response.find_relations(tones, user_id, domain, question, response)
-  # end
 
 end
 #

@@ -54,6 +54,15 @@ class Statistic
     collect_watson_responses = collect_top_words(collected_relations)
   end
 
+  def categories_breakdown
+    categories = [0, 1, 2]
+    categories_breakdown = Response.pluck(:category)
+    categories.map do |category|
+      count = categories_breakdown.count(category).to_f
+      ((count / categories_breakdown.length) * 100).round(3)
+    end
+  end
+
   private
 
   def set_category(number)
