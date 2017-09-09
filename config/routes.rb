@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :category, only: [:index, :create]
+      resources :fixtures, only: [:index]
       resources :top_words, only: [:index]
     end
   end

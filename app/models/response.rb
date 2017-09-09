@@ -18,6 +18,8 @@ class Response < ApplicationRecord
     Statistic.new.categories_breakdown
   end
 
+  def self.get_fixtures
+  end
 
   private
 
