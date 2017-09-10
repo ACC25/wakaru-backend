@@ -22,6 +22,9 @@ describe "GET top words" do
 
       expect(response).to be_success
 
-      scores = JSON.parse(response.body)
+      reply = JSON.parse(response.body)
+      expect(reply["nouns"].class).to eq(Array)
+      expect(reply["adjectives"].class).to eq(Array)
+      expect(reply["keywords"].class).to eq(Array)
   end
 end
