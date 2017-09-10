@@ -24,6 +24,12 @@ class Response < ApplicationRecord
     end
   end
 
+  def self.reset_category(db_id)
+    stat = Statistic.new(db_id)
+    stat.find_my_category
+    stat
+  end
+
   private
 
   def self.enter_db(tones, domain, question, response)
