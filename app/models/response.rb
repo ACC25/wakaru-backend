@@ -11,7 +11,7 @@ class Response < ApplicationRecord
 
   def self.top_words(category)
     text_collection = Response.where(category: category).pluck(:response_text)
-    word = Word.new(category, text_collection)
+    word = Word.new(text_collection)
     word.find_words
     word.top_words
   end

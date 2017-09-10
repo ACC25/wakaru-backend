@@ -4,8 +4,7 @@ class Word
               :reader,
               :top_words
 
-  def initialize(category, text_collection)
-    @wcategory = category
+  def initialize(text_collection)
     @text_collection = text_collection
     @reader = EngTagger.new
     @top_words = {
@@ -24,6 +23,45 @@ class Word
   private
 
   def find_keywords
+    set_keyword_settings
+  end
+
+  def set_keyword_settings
+    text_collection.each do |response|
+      text = Highscore::Content.new response
+      text.configure do
+        set :multiplier, 2
+        set :upper_case, 3
+        set :long_words, 2
+        set :long_words_threshold, 15
+        set :short_words_threshold, 3
+        set :bonus_multiplier, 2
+        set :vowels, 1
+        set :consonants, 5
+        set :ignore_case, true
+        set :word_pattern, /[\w]+[^\s0-9]/
+        set :stemming, true
+      end
+      keywords = text.keywords.top(50).each do |keyword|
+        keyword.text
+        keyword.weight
+      end
+      find_top_keywords(keywords)
+    end
+  end
+
+  def find_top_keywords(keywords)
+    range = keywords.map(&:weight)
+    keywords.map! do |keyword|
+      keyword if range.extend(DescriptiveStatistics).percentile_rank(keyword.weight) > 80.0
+    end
+    keywords.reject! { |item| item.blank? }
+    set_top_keywords(keywords)
+  end
+
+  def set_top_keywords(keywords)
+    words = keywords[0...10].map(&:text)
+    top_words[:keywords] = words
   end
 
   def find_nouns
