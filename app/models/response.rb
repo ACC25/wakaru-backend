@@ -10,8 +10,10 @@ class Response < ApplicationRecord
   end
 
   def self.top_words(category)
-    stat = Statistic.new
-    stat.find_top_words(category)
+    text_collection = Response.where(category: category).pluck(:response_text)
+    word = Word.new(text_collection)
+    word.find_words
+    word.top_words
   end
 
   def self.get_categories

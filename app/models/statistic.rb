@@ -49,11 +49,6 @@ class Statistic
     determine_overall_brand(summary)
   end
 
-  def find_top_words(category)
-    collected_relations = collect_relations(category)
-    collect_watson_responses = collect_top_words(collected_relations)
-  end
-
   def categories_breakdown
     categories = [0, 1, 2]
     categories_breakdown = Response.pluck(:category)
@@ -69,19 +64,6 @@ class Statistic
     categories = ["good", "moderate", "bad"]
     db.update(category: number) if db.domain == 0
     overall_score[:category] = categories[number]
-  end
-
-  def collect_top_words(collected_relations)
-    collected_relations.map do |response|
-      formatted_text = ToneResponse.new("", response).nlp_params
-
-      # response = WatsonService.new(response).analyze_nlp(formatted_text)
-      binding.pry
-    end
-  end
-
-  def collect_relations(category)
-    Response.where(category: category, company_id: db.company_id).pluck(:response_text)
   end
 
   def interpret_findings(findings)
