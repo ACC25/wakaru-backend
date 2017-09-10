@@ -81,7 +81,7 @@ class Statistic
   end
 
   def collect_relations(category)
-    Response.where(category: category).pluck(:response_text)
+    Response.where(category: category, company_id: db.company_id).pluck(:response_text)
   end
 
   def interpret_findings(findings)
@@ -115,18 +115,18 @@ class Statistic
 
   def find_percentile_dissastisfaction
     scores[:dissatisfaction_score].each do |k, v|
-      scores[:dissatisfaction_score][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score)
-      scores[:dissatisfaction_score][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score) if k == :category_3
+      scores[:dissatisfaction_score][k] = Response.where(category: k.to_s.split("_")[1], company_id: db.company_id).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score)
+      scores[:dissatisfaction_score][k] = Response.where(category: 0, company_id: db.company_id).or(Response.where(category: 1, company_id: db.company_id)).pluck(:dissatisfaction_score).extend(DescriptiveStatistics).percentile_rank(db.dissatisfaction_score) if k == :category_3
     end
   end
 
   def find_percentile_enjoyment
     scores.each do |key, value|
       value.each do |k, v|
-          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if key == :enjoyment_score
-          scores[key][k] = Response.where(category: k.to_s.split("_")[1]).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if key == :big_five_score
-          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if k == :category_3 && key == :enjoyment_score
-          scores[key][k] = Response.where(category: 0).or(Response.where(category: 1)).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if k == :category_3 && key == :big_five_score
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1], company_id: db.company_id).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if key == :enjoyment_score
+          scores[key][k] = Response.where(category: k.to_s.split("_")[1], company_id: db.company_id).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if key == :big_five_score
+          scores[key][k] = Response.where(category: 0, company_id: db.company_id).or(Response.where(category: 1, company_id: db.company_id)).pluck(:enjoyment_score).extend(DescriptiveStatistics).percentile_rank(db.enjoyment_score) if k == :category_3 && key == :enjoyment_score
+          scores[key][k] = Response.where(category: 0, company_id: db.company_id).or(Response.where(category: 1, company_id: db.company_id)).pluck(:big_five_score).extend(DescriptiveStatistics).percentile_rank(db.big_five_score) if k == :category_3 && key == :big_five_score
       end
     end
   end

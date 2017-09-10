@@ -18,6 +18,17 @@ class Response < ApplicationRecord
     Statistic.new.categories_breakdown
   end
 
+  def self.get_fixtures
+    Response.where(domain: 1).map do |entry|
+      entry.id
+    end
+  end
+
+  def self.reset_category(db_id)
+    stat = Statistic.new(db_id)
+    stat.find_my_category
+    stat
+  end
 
   private
 
