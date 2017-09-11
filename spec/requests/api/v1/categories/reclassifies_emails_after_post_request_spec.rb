@@ -25,8 +25,6 @@ describe "Reclassification" do
 
       scores = JSON.parse(response.body)
 
-      # expect(scores["scores"]["enjoyment_score"]["category_0"]).to eq(50.0)
-      # expect(scores["scores"]["enjoyment_score"]["category_3"]).to eq(80.0)
       updated_response  = Response.find(bad_bad_response_7.id)
       expect(updated_response.category).to eq(0)
   end
