@@ -62,7 +62,7 @@ class Statistic
 
   def set_category(number)
     categories = ["good", "moderate", "bad"]
-    db.update(category: number) if db.domain == 0
+    db.update!(category: number) if db.domain == 0
     overall_score[:category] = categories[number]
   end
 

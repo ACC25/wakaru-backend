@@ -33,7 +33,11 @@ class Response < ApplicationRecord
   end
 
   def self.reclassify
-    binding.pry
+    responses = Response.where(domain: 0)
+    responses.each do |response|
+      stat = Statistic.new(response.id)
+      stat.find_my_category
+    end
   end
 
   private
