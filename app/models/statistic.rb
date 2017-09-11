@@ -37,7 +37,7 @@ class Statistic
   def find_my_stats
     find_percentile_enjoyment
     find_percentile_dissastisfaction
-    set_category(db.domain)
+    set_category(db.category)
   end
 
   def find_my_category

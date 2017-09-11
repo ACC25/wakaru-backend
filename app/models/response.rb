@@ -1,9 +1,9 @@
 class Response < ApplicationRecord
   belongs_to :company
 
-  def self.analyze_category(question, response, domain)
+  def self.analyze_category(question, response, domain, category)
     tones = WatsonService.new(response).analyze_tone
-    db_response = enter_db(tones, domain, question, response)
+    db_response = enter_db(tones, domain, question, response, category)
     stat = Statistic.new(db_response.id)
     domain == "1" ? stat.find_my_stats : stat.find_my_category
     stat
@@ -32,11 +32,16 @@ class Response < ApplicationRecord
     stat
   end
 
+  def self.reclassify
+    binding.pry
+  end
+
   private
 
-  def self.enter_db(tones, domain, question, response)
+  def self.enter_db(tones, domain, question, response, category)
     self.create!(response_text: response,
                  question_text: question,
+                 category: category,
                  disgust: tones[:document_tone][:tone_categories][0][:tones][1][:score],
                  fear: tones[:document_tone][:tone_categories][0][:tones][2][:score],
                  joy: tones[:document_tone][:tone_categories][0][:tones][3][:score],
