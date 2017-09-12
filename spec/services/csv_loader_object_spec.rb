@@ -20,16 +20,16 @@ describe "csv loader can iterate over a csv file" do
     expect(loader.load_tone_baseline.length).to eq(0)
   end
 
-  xit "can pass information to watson tone service" do
+  it "can pass information to watson tone service" do
     path = 'spec/test_files/warranty_query_good_outcome_good_tone.csv'
     loader = CsvLoader.new(path).load_tone_baseline[0]
 
     response = WatsonService.new(loader.response).analyze_tone
 
-    expect(response.length).to eq(2)
+    expect(response.length).to eq(1)
   end
 
-  xit "can pass information to watson tone_chat service" do
+  it "can pass information to watson tone_chat service" do
     path = 'spec/test_files/warranty_query_good_outcome_good_tone.csv'
     loader = CsvLoader.new(path).load_tone_baseline[0]
 
