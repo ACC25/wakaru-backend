@@ -13,8 +13,11 @@ class JwtService
   end
 
   def decode
+    begin
     decoded_token = JWT.decode(request["token"], ENV['rails_secret_key_base'], true, { :algorithm => 'HS256' })
     decoded_token[0]
+    rescue
+      nil
+    end
   end
-
 end
