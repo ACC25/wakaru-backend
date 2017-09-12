@@ -1,14 +1,24 @@
 class Api::V1::CategoryController < ActionController::API
 
   def index
-    user = Company.find(params["user_id"])
-    render json: user.responses.get_categories
+    token = JwtService.new(params).decode
+    if token && token != nil
+      user = Company.find(token["user_id"])
+      render json: user.responses.get_categories
+    else
+      render json: {error: "Unauthorized Access. Permission Denied."}
+    end
   end
 
   def create
-    user = Company.find(params["user_id"])
-    render json: user.responses.analyze_category(params["question"], params["response"], params["domain"], params["category"]), serializer: StatisticSerializer
-    user.responses.reclassify if params["domain"] == "1"
+    token = JwtService.new(params).decode
+    if token && token != nil
+      user = Company.find(token["user_id"])
+      render json: user.responses.analyze_category(params["question"], params["response"], params["domain"], params["category"]), serializer: StatisticSerializer
+      user.responses.reclassify if params["domain"] == "1"
+    else
+      render json: {error: "Unauthorized Access. Permission Denied."}
+    end
   end
 
 end
