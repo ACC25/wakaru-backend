@@ -10,4 +10,14 @@ class Api::V1::SessionController < ActionController::API
     end
   end
 
+  def index
+    user = Company.find_by(name: params["username"])
+    if user && user.authenticate(params["password"])
+      token = JwtService.new(user).encode
+      render json: {token: token}
+    else
+      render json: {error: "Invalid login credentials."}
+    end
+  end
+
 end
