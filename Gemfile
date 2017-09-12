@@ -34,6 +34,9 @@ gem 'engtagger'
 gem 'highscore'
 gem 'bloomfilter-rb'
 gem 'fast-stemmer'
+gem 'rack-cors'
+gem 'bcrypt'
+gem 'jwt'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
