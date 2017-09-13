@@ -30,8 +30,6 @@ describe "user can login with api" do
 
     get '/api/v1/session', :params => user
 
-    expect(response).to be_success
-
     reply = JSON.parse(response.body)
 
     expect(reply["error"]).to eq("Invalid login credentials.")
@@ -45,8 +43,6 @@ describe "user can login with api" do
     }
 
     get '/api/v1/session', :params => user
-
-    expect(response).to be_success
 
     reply = JSON.parse(response.body)
 
