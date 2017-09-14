@@ -16,6 +16,17 @@ class Response < ApplicationRecord
     word.top_words
   end
 
+  def self.reformat_scores(scores, summary)
+    output = scores.map do |scores|
+      object_1 = {x: "Good", y: scores[1][:category_0]}
+      object_2 = {x: "Medium", y: scores[1][:category_1]}
+      object_3 = {x: "Bad", y: scores[1][:category_2]}
+      output = [object_1, object_2, object_3]
+      output
+    end
+    output
+  end
+
   def self.get_categories
     Statistic.new.categories_breakdown
   end
