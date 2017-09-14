@@ -53,8 +53,14 @@ class Statistic
     categories = [0, 1, 2]
     categories_breakdown = Response.pluck(:category)
     categories.map do |category|
+      hash = {x: "", y: ""}
+      category_map = {Good: 0, Medium: 1, Bad: 2}
       count = categories_breakdown.count(category).to_f
-      ((count / categories_breakdown.length) * 100).round(3)
+      percentage = ((count / categories_breakdown.length) * 100).round(3)
+      key = category_map.key(category).to_s
+      hash[:x] = key
+      hash[:y] = percentage
+      hash
     end
   end
 
