@@ -17,14 +17,19 @@ class Response < ApplicationRecord
   end
 
   def self.reformat_scores(scores, summary)
-    output = scores.map do |scores|
+    formatted_scores = scores.map do |scores|
       object_1 = {x: "Good", y: scores[1][:category_0]}
       object_2 = {x: "Medium", y: scores[1][:category_1]}
       object_3 = {x: "Bad", y: scores[1][:category_2]}
       output = [object_1, object_2, object_3]
       output
     end
-    output
+    enjoyment = [summary[:enjoyment]]
+    brand = [summary[:brand]]
+    category = [summary[:category]]
+    formatted_scores.push(enjoyment)
+    formatted_scores.push(brand)
+    formatted_scores.push(category)
   end
 
   def self.get_categories
