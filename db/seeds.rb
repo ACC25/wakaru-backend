@@ -17,6 +17,7 @@ class SeedData
       watson = WatsonService.new(response.response)
       tones = watson.analyze_tone
       tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
+      create_company_response(tones, response.question, response.response)
       tone_object = db_create_tones(tones, response.question, response.response)
       tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id) if tone_chat != nil
       write_to_csv(tone_object)
@@ -27,8 +28,49 @@ class SeedData
 
   private
 
+  def create_company_response(tones, question, response)
+    input = Response.create!(company_id: 1,
+                          response_text: response,
+                          question_text: question,
+                          disgust: tones[:document_tone][:tone_categories][0][:tones][1][:score],
+                          fear: tones[:document_tone][:tone_categories][0][:tones][2][:score],
+                          joy: tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                          sadness: tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                          anger: tones[:document_tone][:tone_categories][0][:tones][0][:score],
+                          analytical: tones[:document_tone][:tone_categories][1][:tones][0][:score],
+                          confident: tones[:document_tone][:tone_categories][1][:tones][1][:score],
+                          tentative: tones[:document_tone][:tone_categories][1][:tones][2][:score],
+                          openness: tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                          conscientiousness: tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                          extraversion: tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                          agreeableness: tones[:document_tone][:tone_categories][2][:tones][3][:score],
+                          emotional_range: tones[:document_tone][:tone_categories][2][:tones][4][:score],
+                          category: @category,
+                          domain: @domain,
+                          enjoyment_score: calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                                tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                          big_five_score: calculate_big5(tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][3][:score],
+                                                          tones[:document_tone][:tone_categories][2][:tones][4][:score]),
+                          dissatisfaction_score: calculate_dissatisfaction(calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
+                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][0][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][1][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score])
+                                                                                              )
+  end
+
   def write_to_csv(tone_object)
-    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range", "Enjoyment Score", "Big 3"]
+    header = ["Category", "Domain", "Disgust", "Fear", "Joy", "Sadness", "Anger", "Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Emotional Range", "Enjoyment Score", "Big 5 Score", "Dissatisfaction Score"]
     CSV.open("db/stats/form_outcomes.csv", "a+") do |csv|
       row = CSV::Row.new(header,[])
       row["Category"] = tone_object.category
@@ -44,7 +86,8 @@ class SeedData
       row["Agreeableness"] = tone_object.agreeableness
       row["Emotional Range"] = tone_object.emotional_range
       row["Enjoyment Score"] = tone_object.enjoyment_score
-      row["Big 3"] = tone_object.big_five_score
+      row["Big 5"] = tone_object.big_five_score
+      row["Dissatisfaction Score"] = tone_object.dissatisfaction_score
       csv << row
     end
   end
@@ -149,6 +192,7 @@ end
 # domain 1 = private results
 # domain 2 = professional results
 
+Company.create!(name: "Wakaru", password: "password")
 SeedData.new("db/stats/responses/Warranty Query - Good Outcome%2FGood Tone.csv", 0, 0).load_fixture
 SeedData.new("db/stats/responses/Warranty Query - Bad Outcome%2FGood Tone.csv", 1, 0).load_fixture
 SeedData.new("db/stats/responses/Warranty Query - Bad Outcome%2FBad Tone.csv", 2, 0).load_fixture
