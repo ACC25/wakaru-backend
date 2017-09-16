@@ -34,8 +34,7 @@ describe "POST /api/v1/category?" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores["scores"]["enjoyment_score"]["category_0"]).to eq(50.0)
-    expect(scores["scores"]["enjoyment_score"]["category_3"]).to eq(75.0)
+    expect(scores[0][0]["y"]).to eq(50.0)
   end
 
   it "responds with an appropriate category for a clearly innapropriate email" do
@@ -71,8 +70,8 @@ describe "POST /api/v1/category?" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores["overall_score"]["enjoyment"]).to eq("Overall tone is unprofessional.")
-    expect(scores["overall_score"]["brand"]).to eq("Brand suffered from interaction.")
+    expect(scores[3][0]).to eq("Overall tone is unprofessional.")
+    expect(scores[4][0]).to eq("Brand suffered from interaction.")
   end
 
   it "responds with an appropriate category for a professionally written email" do
@@ -108,8 +107,8 @@ describe "POST /api/v1/category?" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores["overall_score"]["enjoyment"]).to eq("Overall tone of this email is positive and agreeable.")
-    expect(scores["overall_score"]["brand"]).to eq("Great brand representation.")
+    expect(scores[3][0]).to eq("Overall tone of this email is positive and agreeable.")
+    expect(scores[4][0]).to eq("Great brand representation.")
   end
 
   it "responds with an appropriate category for an average email" do
@@ -145,8 +144,8 @@ describe "POST /api/v1/category?" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores["overall_score"]["enjoyment"]).to eq("Overall tone uncertain. Recommend re-write.")
-    expect(scores["overall_score"]["brand"]).to eq("Overall positive brand representation.")
-    expect(scores["overall_score"]["category"]).to eq("moderate")
+    expect(scores[3][0]).to eq("Overall tone uncertain. Recommend re-write.")
+    expect(scores[4][0]).to eq("Overall positive brand representation.")
+    expect(scores[5][0]).to eq("moderate")
   end
 end
