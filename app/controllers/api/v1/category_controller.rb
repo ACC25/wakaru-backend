@@ -4,7 +4,7 @@ class Api::V1::CategoryController < ActionController::API
     token = JwtService.new(params).decode
     if token && token != nil
       user = Company.find(token["user_id"])
-      render json: user.responses.get_categories
+      render json: user.responses.get_categories(user.id)
     else
       render json: {error: "Unauthorized Access. Permission Denied."}
     end

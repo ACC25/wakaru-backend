@@ -49,9 +49,9 @@ class Statistic
     determine_overall_brand(summary)
   end
 
-  def categories_breakdown
+  def categories_breakdown(user_id)
     categories = [0, 1, 2]
-    categories_breakdown = Response.pluck(:category)
+    categories_breakdown = Response.where(company_id: user_id).pluck(:category)
     categories.map do |category|
       hash = {x: "", y: ""}
       category_map = {Good: 0, Medium: 1, Bad: 2}
@@ -92,6 +92,7 @@ class Statistic
   end
 
   def low_medium_high(number)
+    number = 0 if number == nil
     if number >= 75.0
       "high"
     elsif number >= 45.0 && number <= 75.0

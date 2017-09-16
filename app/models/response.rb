@@ -18,9 +18,12 @@ class Response < ApplicationRecord
 
   def self.reformat_scores(scores, summary)
     formatted_scores = scores.map do |scores|
-      object_1 = {x: "Good", y: scores[1][:category_0]}
-      object_2 = {x: "Medium", y: scores[1][:category_1]}
-      object_3 = {x: "Bad", y: scores[1][:category_2]}
+      scores[1][:category_0] = 0 if scores[1][:category_0] == nil
+      scores[1][:category_1] = 0 if scores[1][:category_1] == nil
+      scores[1][:category_2] = 0 if scores[1][:category_2] == nil
+      object_1 = {x: 0, y: scores[1][:category_0]}
+      object_2 = {x: 1, y: scores[1][:category_1]}
+      object_3 = {x: 2, y: scores[1][:category_2]}
       output = [object_1, object_2, object_3]
       output
     end
@@ -32,8 +35,8 @@ class Response < ApplicationRecord
     formatted_scores.push(category)
   end
 
-  def self.get_categories
-    Statistic.new.categories_breakdown
+  def self.get_categories(user_id)
+    Statistic.new.categories_breakdown(user_id)
   end
 
   def self.get_fixtures
