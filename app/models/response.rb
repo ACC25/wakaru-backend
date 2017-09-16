@@ -21,9 +21,9 @@ class Response < ApplicationRecord
       scores[1][:category_0] = 0 if scores[1][:category_0] == nil
       scores[1][:category_1] = 0 if scores[1][:category_1] == nil
       scores[1][:category_2] = 0 if scores[1][:category_2] == nil
-      object_1 = {x: 0, y: scores[1][:category_0]}
-      object_2 = {x: 1, y: scores[1][:category_1]}
-      object_3 = {x: 2, y: scores[1][:category_2]}
+      object_1 = {x: 0, y: scores[1][:category_0].round}
+      object_2 = {x: 1, y: scores[1][:category_1].round}
+      object_3 = {x: 2, y: scores[1][:category_2].round}
       output = [object_1, object_2, object_3]
       output
     end
