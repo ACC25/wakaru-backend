@@ -30,9 +30,9 @@ describe "GET categories" do
       expect(response).to be_success
 
       scores = JSON.parse(response.body)
-      expect(scores[0]).to eq(33.333)
-      expect(scores[1]).to eq(33.333)
-      expect(scores[2]).to eq(33.333)
+      expect(scores[0]["y"]).to eq(33.333)
+      expect(scores[1]["y"]).to eq(33.333)
+      expect(scores[2]["y"]).to eq(33.333)
   end
 
   it "returns uneven breakdown correctly" do
@@ -63,14 +63,14 @@ describe "GET categories" do
     email = {
       token: reply["token"]
     }
-    
+
     get "/api/v1/category", :params => email
 
     expect(response).to be_success
 
     scores = JSON.parse(response.body)
-    expect(scores[0]).to eq(18.182)
-    expect(scores[1]).to eq(18.182)
-    expect(scores[2]).to eq(63.636)
+    expect(scores[0]["y"]).to eq(18.182)
+    expect(scores[1]["y"]).to eq(18.182)
+    expect(scores[2]["y"]).to eq(63.636)
   end
 end

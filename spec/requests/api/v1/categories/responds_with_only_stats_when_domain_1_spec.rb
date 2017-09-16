@@ -35,8 +35,9 @@ describe "responds with only stat information when fixture is set" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores["overall_score"]["enjoyment"]).to eq("")
-    expect(scores["overall_score"]["brand"]).to eq("")
-    expect(scores["overall_score"]["category"]).to eq("moderate")
+
+    expect(scores[3]).to eq([""])
+    expect(scores[4]).to eq([""])
+    expect(scores[5]).to eq(["moderate"])
   end
 end

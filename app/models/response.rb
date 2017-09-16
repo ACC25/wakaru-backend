@@ -94,12 +94,13 @@ class Response < ApplicationRecord
                                                                                       tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                                                       tones[:document_tone][:tone_categories][2][:tones][3][:score]),
                                                                                       tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                      tones[:document_tone][:tone_categories][0][:tones][4][:score])
+                                                                                      tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                                      tones[:document_tone][:tone_categories][2][:tones][3][:score])
                   )
   end
 
-  def self.calculate_dissatisfaction(enjoyment_score, extraversion, sadness)
-    enjoyment_score - extraversion * sadness
+  def self.calculate_dissatisfaction(enjoyment_score, extraversion, sadness, agreeableness)
+    enjoyment_score - extraversion - agreeableness * sadness
   end
 
   def self.calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)
