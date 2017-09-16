@@ -86,7 +86,7 @@ class SeedData
       row["Agreeableness"] = tone_object.agreeableness
       row["Emotional Range"] = tone_object.emotional_range
       row["Enjoyment Score"] = tone_object.enjoyment_score
-      row["Big 5"] = tone_object.big_five_score
+      row["Big 5 Score"] = tone_object.big_five_score
       row["Dissatisfaction Score"] = tone_object.dissatisfaction_score
       csv << row
     end
@@ -128,7 +128,8 @@ class SeedData
                                                                                               tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                                                               tones[:document_tone][:tone_categories][2][:tones][3][:score]),
                                                                                               tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score])
+                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score])
                                                                                               )
   end
 
@@ -144,8 +145,8 @@ class SeedData
                           response_tone_two: validate_tone_chat_two(tone_chat))
   end
 
-  def calculate_dissatisfaction(enjoyment_score, extraversion, sadness)
-    enjoyment_score - extraversion * sadness
+  def calculate_dissatisfaction(enjoyment_score, extraversion, sadness, agreeableness)
+    enjoyment_score - extraversion - agreeableness * sadness
   end
 
   def calculate_big5(openness, conscientiousness, extraversion, agreeableness, emotional_range)
