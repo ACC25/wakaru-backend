@@ -69,7 +69,7 @@ describe "users can use a valid token for multiple calls" do
 
     scores = JSON.parse(response.body)
 
-    expect(scores[0][0]["y"]).to eq(33.33333333333333)
+    expect(scores[0][0]["y"]).to eq(33)
     expect(scores[0][2]["y"]).to eq(100.0)
 
     email = {
