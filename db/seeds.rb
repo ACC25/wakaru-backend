@@ -48,9 +48,6 @@ class SeedData
                           category: @category,
                           domain: @domain,
                           enjoyment_score: calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
-                                                                tones[:document_tone][:tone_categories][0][:tones][4][:score],
-                                                                tones[:document_tone][:tone_categories][2][:tones][0][:score],
-                                                                tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                                 tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score]),
                           big_five_score: calculate_big5(tones[:document_tone][:tone_categories][2][:tones][0][:score],
@@ -59,14 +56,12 @@ class SeedData
                                                           tones[:document_tone][:tone_categories][2][:tones][3][:score],
                                                           tones[:document_tone][:tone_categories][2][:tones][4][:score]),
                           dissatisfaction_score: calculate_dissatisfaction(calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
-                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][0][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][1][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score]),
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score])
-                                                                                              )
+                                                                                                tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                                tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                                                                            tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                            tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                            tones[:document_tone][:tone_categories][2][:tones][3][:score])
+                          )
   end
 
   def write_to_csv(tone_object)
@@ -111,9 +106,6 @@ class SeedData
                           category: @category,
                           domain: @domain,
                           enjoyment_score: calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
-                                                                tones[:document_tone][:tone_categories][0][:tones][4][:score],
-                                                                tones[:document_tone][:tone_categories][2][:tones][0][:score],
-                                                                tones[:document_tone][:tone_categories][2][:tones][1][:score],
                                                                 tones[:document_tone][:tone_categories][2][:tones][2][:score],
                                                                 tones[:document_tone][:tone_categories][2][:tones][3][:score]),
                           big_five_score: calculate_big5(tones[:document_tone][:tone_categories][2][:tones][0][:score],
@@ -122,15 +114,12 @@ class SeedData
                                                           tones[:document_tone][:tone_categories][2][:tones][3][:score],
                                                           tones[:document_tone][:tone_categories][2][:tones][4][:score]),
                           dissatisfaction_score: calculate_dissatisfaction(calculate_enjoyment(tones[:document_tone][:tone_categories][0][:tones][3][:score],
-                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][0][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][1][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score]),
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][2][:score],
-                                                                                              tones[:document_tone][:tone_categories][0][:tones][4][:score],
-                                                                                              tones[:document_tone][:tone_categories][2][:tones][3][:score])
-                                                                                              )
+                                                                                                tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                                                tones[:document_tone][:tone_categories][2][:tones][3][:score]),
+                                                                            tones[:document_tone][:tone_categories][2][:tones][2][:score],
+                                                                            tones[:document_tone][:tone_categories][0][:tones][4][:score],
+                                                                            tones[:document_tone][:tone_categories][2][:tones][3][:score])
+                          )
   end
 
   def db_create_tone_chat(tone_chat, foreign_key)
@@ -154,7 +143,7 @@ class SeedData
     metrics.reduce(:+)
   end
 
-  def calculate_enjoyment(joy, sadness, openness, conscientiousness, extraversion, agreeableness)
+  def calculate_enjoyment(joy, extraversion, agreeableness)
     metrics = [extraversion, agreeableness]
     metrics.reduce(:+) * joy
   end
