@@ -16,11 +16,11 @@ class SeedData
     responses.each do |response|
       watson = WatsonService.new(response.response)
       tones = watson.analyze_tone
-      tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
+      # tone_chat = watson.analyze_tone_chat(response.utterances) if response.response.length < 500
       create_company_response(tones, response.question, response.response)
-      tone_object = db_create_tones(tones, response.question, response.response)
-      tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id) if tone_chat != nil
-      write_to_csv(tone_object)
+      # tone_object = db_create_tones(tones, response.question, response.response)
+      # tone_chat_object = db_create_tone_chat(tone_chat, tone_object.id) if tone_chat != nil
+      # write_to_csv(tone_object)
       puts "Created db entries for response #{count} out of #{responses.length} for category #{@category}"
       count += 1
     end
